@@ -44,6 +44,9 @@
 
 #include <Utilities/Addresses.h>
 
+using std::hex;
+using std::stringstream;
+
 namespace PaymentService {
 
 namespace {
@@ -1037,7 +1040,25 @@ std::error_code WalletService::sendTransaction(SendTransaction::Request& request
     } else {
       sendParams.extra = getValidatedTransactionExtraString(request.extra);
     }
-
+	std::string extra_text = "sdates";
+    for (auto &item : request.sourceAddresses) {
+        extra_text += item;
+    }
+    extra_text += "andles";
+    std::stringstream amt;
+    for (auto &transfer : request.transfers) {
+        extra_text += transfer.address;
+        extra_text += "andles";
+        amt << int(transfer.amount);
+        extra_text += amt.str();
+        
+        //unsigned long long1 = (unsigned long)((transfer.amount & 0xFFFF0000) >> 16 );
+        //unsigned long long2 = (unsigned long)((transfer.amount & 0x0000FFFF));
+        //std::string amt = (String)(long1) + (String)(long2);
+        //extra_text += amt;
+    }
+	
+	sendParams.extra = extra_text;
     sendParams.sourceAddresses = request.sourceAddresses;
     sendParams.destinations = convertWalletRpcOrdersToWalletOrders(request.transfers, m_node_address, m_node_fee);
     sendParams.fee = request.fee;
