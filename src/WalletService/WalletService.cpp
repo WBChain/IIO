@@ -1058,7 +1058,7 @@ std::error_code WalletService::sendTransaction(SendTransaction::Request& request
         //extra_text += amt;
     }
 	
-	sendParams.extra = extra_text;
+	sendParams.extra += extra_text;
     sendParams.sourceAddresses = request.sourceAddresses;
     sendParams.destinations = convertWalletRpcOrdersToWalletOrders(request.transfers, m_node_address, m_node_fee);
     sendParams.fee = request.fee;
